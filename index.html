@@ -770,7 +770,7 @@ const questions = {
     },
     {
       topic: "Cell References (Relative vs Absolute)",
-      q: "A commission calculator has sales in column A and a rate in B1. You want to copy the formula down so the rate always refers to B1. Which formula in A2 is correct?",
+      q: "A commission calculator has sales in column A and a rate in B1. You want to copy the formula down so the rate always refers to B1. Which formula in B2 is correct?",
       opts: [
         "=A2*B1",
         "=A2*$B1",
@@ -793,7 +793,7 @@ const questions = {
       explain: "<strong>Correct!</strong> Absolute references ($A$1:$A$10) are 'locked' — they don't adjust when the formula is copied to other cells. Every copy of the formula sums the same fixed range."
     },
 
-    // --- Copy, Paste & AutoFill (2 q) ---
+    // --- Copy, Paste & AutoFill (3 q) ---
     {
       topic: "Copy, Paste & AutoFill",
       q: "You have a formula-based report. A colleague needs the values in a new sheet but NOT the formulas or formatting. Which paste option is correct?",
@@ -817,6 +817,18 @@ const questions = {
       ],
       ans: 1,
       explain: "<strong>Correct!</strong> Excel recognizes date patterns and extends them automatically when you drag the fill handle. Selecting multiple cells first gives Excel enough context to identify the step size (1 month)."
+    },
+    {
+      topic: "Copy, Paste & AutoFill",
+      q: "A customer list has email addresses like priya.shah@company.com. You need a quick one-time extract of first names into the next column. Which Excel feature is best?",
+      opts: [
+        "Flash Fill after typing the first expected result",
+        "Paste Special -> Formats",
+        "Ctrl+D Fill Down without an example",
+        "Find & Replace the @ symbol"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> Flash Fill detects a pattern from your example, such as extracting 'priya' from an email address, and fills the remaining rows. It is ideal for quick one-time transformations without writing formulas."
     },
 
     // --- Sorting & Basic Filtering (3 q) ---
@@ -857,7 +869,7 @@ const questions = {
       explain: "<strong>Correct!</strong> AutoFilter with multiple column filters is non-destructive (rows are hidden, not deleted) and instantly reversible. Custom Filter allows you to set numeric conditions like 'greater than'."
     },
 
-    // --- Page Setup & Printing (2 q) ---
+    // --- Page Setup & Printing (3 q) ---
     {
       topic: "Page Setup & Printing",
       q: "Your 6-column report prints across 3 pages horizontally. How do you force it to print on a single page wide?",
@@ -882,19 +894,31 @@ const questions = {
       ans: 1,
       explain: "<strong>Correct!</strong> Print Titles (Page Layout tab) repeats specific rows or columns on every printed page. Freeze Panes only affects the screen view, not printing. Headers/Footers appear in the margin, not in the data area."
     },
+    {
+      topic: "Page Setup & Printing",
+      q: "A worksheet contains raw data below a polished dashboard. You only want the dashboard range A1:H25 to print. Which setting should you use?",
+      opts: [
+        "Hide all rows and columns outside A1:H25 every time",
+        "Select A1:H25 and set it as the Print Area",
+        "Use Freeze Panes on row 25",
+        "Change the workbook view to Page Break Preview only"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Print Area tells Excel exactly which range should print, so the raw data outside A1:H25 is excluded without deleting, hiding, or rearranging the worksheet."
+    },
 
     // --- Saving, File Formats & Workbook Basics (3 q) ---
     {
       topic: "Saving, File Formats & Workbook Basics",
-      q: "You create a workbook with macros, but colleagues saving it as .xlsx lose all macros. Which format preserves macros?",
+      q: "You create a workbook with macros, but colleagues saving it as .xlsx lose all macros. Which recommended modern workbook format should they use?",
       opts: [
-        ".xlsx — Excel Workbook",
-        ".xls — Excel 97-2003",
+        ".xlsx — standard Excel Workbook",
+        ".xls — legacy Excel 97-2003 Workbook",
         ".xlsm — Excel Macro-Enabled Workbook",
-        ".xlsb — Excel Binary Workbook"
+        ".csv — comma-separated values"
       ],
       ans: 2,
-      explain: "<strong>Correct!</strong> .xlsm is the macro-enabled Excel format. The 'm' stands for macro. .xlsx intentionally cannot store VBA code as a security measure. .xlsb also stores macros but is less universally supported."
+      explain: "<strong>Correct!</strong> .xlsm is the standard modern Excel format for workbooks that contain VBA macros. .xlsx intentionally cannot store VBA code, .csv strips workbook features, and .xls is a legacy format."
     },
     {
       topic: "Saving, File Formats & Workbook Basics",
@@ -938,7 +962,7 @@ const questions = {
     },
     {
       topic: "Logical & Lookup Functions",
-      q: "A commission table has: $0–$50K = 5%, $50K–$100K = 8%, over $100K = 12%. Cell A1 has the sales amount. Which formula is both correct and concise?",
+      q: "A commission table has: under $50K = 5%, $50K to under $100K = 8%, and $100K or more = 12%. Cell A1 has the sales amount. Which formula is both correct and concise?",
       opts: [
         "=IF(A1<50000,5%,IF(A1<100000,8%,12%))",
         "=CHOOSE(A1,5%,8%,12%)",
@@ -962,7 +986,7 @@ const questions = {
     },
     {
       topic: "Logical & Lookup Functions",
-      q: "You need VLOOKUP to return 'Not Available' when no match is found, instead of #N/A. Which is the most concise formula?",
+      q: "You need VLOOKUP to return 'Not Available' only when no match is found, while preserving other formula errors for debugging. Which formula is best?",
       opts: [
         "=IF(ISNA(VLOOKUP(A2,Table,2,FALSE)),\"Not Available\",VLOOKUP(A2,Table,2,FALSE))",
         "=IFERROR(VLOOKUP(A2,Table,2,FALSE),\"Not Available\")",
@@ -1064,15 +1088,15 @@ const questions = {
     },
     {
       topic: "Text Functions & Data Cleaning",
-      q: "Phone numbers are stored inconsistently: '0412345678', '0412 345 678', '(04) 1234 5678'. You need them all as '0412345678'. Which function removes all spaces?",
+      q: "Phone numbers are stored inconsistently: '0412345678', '0412 345 678', '(04) 1234 5678'. You need them all as '0412345678'. Which formula standardizes these examples?",
       opts: [
         "=TRIM(A1)",
         "=SUBSTITUTE(A1,\" \",\"\")",
         "=CLEAN(A1)",
-        "=REPLACE(A1,\" \",\"\")"
+        "=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(A1,\" \",\"\"),\"(\",\"\"),\")\",\"\")"
       ],
-      ans: 1,
-      explain: "<strong>Correct!</strong> SUBSTITUTE replaces every occurrence of a specific character (space) with nothing. TRIM only removes leading/trailing spaces and reduces internal multiple spaces to one — it won't remove ALL spaces."
+      ans: 3,
+      explain: "<strong>Correct!</strong> Nested SUBSTITUTE calls remove each unwanted character in the examples: spaces, opening parentheses, and closing parentheses. TRIM and CLEAN do not remove all of those visible formatting characters."
     },
     {
       topic: "Text Functions & Data Cleaning",
@@ -1087,18 +1111,18 @@ const questions = {
       explain: "<strong>Correct!</strong> DATE(year,month,day) assembles a proper Excel date from numeric parts. LEFT extracts YYYY (4 chars), MID extracts MM (2 chars starting at position 5), RIGHT extracts DD (2 chars). DATEVALUE needs a formatted date string, not a compact number."
     },
 
-    // --- Date & Time Functions (2 q) ---
+    // --- Date & Time Functions (3 q) ---
     {
       topic: "Date & Time Functions",
       q: "You need working days (Mon–Fri only) between a project start date in A1 and end date in B1, excluding weekends. Which formula is correct?",
       opts: [
         "=B1-A1",
         "=DAYS(B1,A1)",
-        "=NETWORKDAYS(A1,B1)-1",
+        "=NETWORKDAYS(A1,B1)",
         "=WORKDAY(B1,-A1)"
       ],
       ans: 2,
-      explain: "<strong>Correct!</strong> NETWORKDAYS counts working days between two dates, inclusive of both endpoints. Subtracting 1 excludes the start date to count elapsed working days. NETWORKDAYS can also accept a holiday list as a third argument."
+      explain: "<strong>Correct!</strong> NETWORKDAYS counts working days between two dates, excluding Saturdays and Sundays by default. It includes both the start and end dates; add a holiday range as the third argument when needed."
     },
     {
       topic: "Date & Time Functions",
@@ -1112,8 +1136,20 @@ const questions = {
       ans: 1,
       explain: "<strong>Correct!</strong> MONTH() returns an integer 1–12. TEXT(A1,\"MM\") also returns the month but as text (\"03\"), which can cause issues in calculations. MID() would only work for specific date string formats and is fragile."
     },
+    {
+      topic: "Date & Time Functions",
+      q: "An invoice date is in A2. Payment terms are 10 working days, excluding weekends and the company holidays listed in H2:H20. Which formula returns the due date?",
+      opts: [
+        "=A2+10",
+        "=NETWORKDAYS(A2,10,H2:H20)",
+        "=WORKDAY(A2,10,H2:H20)",
+        "=EDATE(A2,10)"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> WORKDAY(start_date, days, [holidays]) returns a future date after a specified number of working days. NETWORKDAYS counts working days between two dates; it does not return the due date."
+    },
 
-    // --- PivotTables – Introduction (2 q) ---
+    // --- PivotTables – Introduction (3 q) ---
     {
       topic: "PivotTables — Introduction",
       q: "Sales data has: Date, Salesperson, Region, Product, Revenue. Your manager wants total revenue by Region with Salesperson subtotals within each region. How do you configure the PivotTable?",
@@ -1128,18 +1164,30 @@ const questions = {
     },
     {
       topic: "PivotTables — Introduction",
-      q: "Your PivotTable groups dates by month but shows them alphabetically (April, August…) instead of chronologically. How do you fix the sort order?",
+      q: "Your PivotTable uses imported text month names and shows them alphabetically (April, August...) instead of chronologically. How do you fix the sort order?",
       opts: [
         "Sort the source data by date before refreshing",
         "Right-click the month labels → Sort → Sort Oldest to Newest",
-        "Group the Date field in the PivotTable by Month — Excel maintains chronological order",
+        "Use the real Date field in the PivotTable and group it by Month",
         "Manually drag month labels into the correct position"
       ],
       ans: 2,
-      explain: "<strong>Correct!</strong> When you Group dates by Month using the PivotTable's grouping feature (right-click a date → Group), Excel maintains the correct Jan–Dec chronological order. If months are text strings, they'll sort alphabetically — grouping the actual date field avoids this."
+      explain: "<strong>Correct!</strong> Text month names sort alphabetically. Using the actual Date field and grouping it by Month lets Excel use date order, so the PivotTable displays Jan through Dec correctly."
+    },
+    {
+      topic: "PivotTables — Introduction",
+      q: "After you paste 200 new sales rows into the source data, the PivotTable totals do not change. What should you do first?",
+      opts: [
+        "Refresh the PivotTable",
+        "Recreate the workbook from scratch",
+        "Manually type the new totals into the PivotTable",
+        "Convert all numbers to text"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> PivotTables cache source data, so they do not always update immediately after the source changes. Refreshing the PivotTable pulls in the latest records, especially when the source is an Excel Table that auto-expands."
     },
 
-    // --- Data Validation & Form Controls (2 q) ---
+    // --- Data Validation & Form Controls (3 q) ---
     {
       topic: "Data Validation & Form Controls",
       q: "An expense form's 'Category' column should only accept: Travel, Accommodation, Meals, Equipment. How do you enforce this?",
@@ -1164,11 +1212,23 @@ const questions = {
       ans: 0,
       explain: "<strong>Correct!</strong> In Data Validation, choose 'Custom' and use =B1<=TODAY(). This formula evaluates to TRUE only when the entered date is today or earlier. TODAY() updates dynamically, so no maintenance is needed."
     },
+    {
+      topic: "Data Validation & Form Controls",
+      q: "A pricing template lets users choose a Product ID in B2, and the allowed IDs are maintained in a table column named Products[ID]. Which validation source is easiest to maintain?",
+      opts: [
+        "Type every product ID directly into the Data Validation source box",
+        "Use a named range that refers to Products[ID], then use that name as the List source",
+        "Use Conditional Formatting to color invalid IDs red",
+        "Protect the workbook structure"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> A named range that points to the table column gives Data Validation a reusable source that grows as the Products table grows. Hard-coded lists are harder to maintain and easy to forget when product IDs change."
+    },
 
     // --- Conditional Formatting (3 q) ---
     {
       topic: "Conditional Formatting",
-      q: "A profit/loss column should show: positive values in green, negative in red, zero in yellow. What's the most efficient approach?",
+      q: "A profit/loss column should show positive values with green fill, negative values with red fill, and zero values with yellow fill. What's the most efficient approach?",
       opts: [
         "Manually change font color cell by cell",
         "Apply a Color Scale (green-yellow-red gradient)",
@@ -1180,15 +1240,15 @@ const questions = {
     },
     {
       topic: "Conditional Formatting",
-      q: "You want to highlight duplicate customer IDs in a column to find data entry errors. Which Conditional Formatting option does this directly?",
+      q: "You want to highlight duplicate customer IDs in a column to find data entry errors. Which built-in Conditional Formatting option does this directly without writing a formula?",
       opts: [
         "Top/Bottom Rules → Top 10 Items",
         "Highlight Cells Rules → Duplicate Values",
-        "New Rule → Use a formula: =COUNTIF($A:$A,A1)>1",
-        "Both B and C highlight duplicates"
+        "Data Bars",
+        "Color Scales"
       ],
-      ans: 3,
-      explain: "<strong>Correct!</strong> Both work: 'Duplicate Values' is a built-in one-click option; the COUNTIF formula approach gives more flexibility (e.g., highlighting only the 2nd and subsequent duplicates). Both are valid in practice."
+      ans: 1,
+      explain: "<strong>Correct!</strong> Highlight Cells Rules → Duplicate Values is Excel's built-in option for duplicate detection. A COUNTIF-based formula can also work, but the built-in rule is the direct no-formula method."
     },
     {
       topic: "Conditional Formatting",
@@ -1216,7 +1276,7 @@ const questions = {
         "VLOOKUP cannot handle numeric IDs"
       ],
       ans: 0,
-      explain: "<strong>Correct!</strong> VLOOKUP always searches the first (leftmost) column of the specified range. If your lookup column is in the middle or right of your data, VLOOKUP breaks. INDEX-MATCH and XLOOKUP have no this limitation."
+      explain: "<strong>Correct!</strong> VLOOKUP always searches the first (leftmost) column of the specified range. If your lookup column is in the middle or right of your data, VLOOKUP breaks. INDEX-MATCH and XLOOKUP do not have this limitation."
     },
     {
       topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
@@ -1237,10 +1297,10 @@ const questions = {
         "=XLOOKUP(A2,$C$1:$C$100,$F$1:$F$100)",
         "=XLOOKUP(A2,$C$1:$F$100,4)",
         "=XLOOKUP(A2,$C$1:$C$100,$F$1:$F$100,\"Not Found\")",
-        "Both A and C work"
+        "Both A and C are identical"
       ],
-      ans: 3,
-      explain: "<strong>Correct!</strong> XLOOKUP(lookup, lookup_array, return_array, [if_not_found]). Both A and C are valid; C is more robust because it returns 'Not Found' instead of #N/A when no match exists. XLOOKUP also searches right-to-left, handles multiple return columns, and doesn't require the table to be sorted."
+      ans: 0,
+      explain: "<strong>Correct!</strong> XLOOKUP(lookup_value, lookup_array, return_array) maps the VLOOKUP lookup value A2 to column C and returns the matching value from column F. Option C is a useful improved version, but it is not strictly equivalent because it adds a custom if-not-found result."
     },
     {
       topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
@@ -1392,7 +1452,7 @@ const questions = {
         "Protect Workbook → specify the input range"
       ],
       ans: 1,
-      explain: "<strong>Correct!</strong> All cells are locked by default. The correct workflow: (1) Select all → unlock everything first, (2) Select only the formula cells → lock them, (3) Protect Sheet. Or equivalently: unlock just the input cells (B2:B50), leaving everything else locked, then Protect Sheet."
+      explain: "<strong>Correct!</strong> Cell locking only takes effect after the sheet is protected. Lock the worksheet cells, unlock only the input range B2:B50, and then Protect Sheet so users can edit inputs while formulas remain protected."
     },
     {
       topic: "Workbook Protection & Security",
@@ -1441,10 +1501,10 @@ const questions = {
         "=SUMIF(A:A,\"East\",B:B)",
         "=SUM(IF(A2:A100=\"East\",B2:B100,0)) — entered with Ctrl+Shift+Enter",
         "=SUMPRODUCT((A2:A100=\"East\")*B2:B100)",
-        "All three work"
+        "Both B and C work"
       ],
       ans: 3,
-      explain: "<strong>Correct!</strong> All three work: SUMIF is simplest; the CSE array formula (Ctrl+Shift+Enter) evaluates each row conditionally; SUMPRODUCT multiplies the logical array (TRUE/FALSE = 1/0) by revenue values. In Excel 365, the CSE formula works without Ctrl+Shift+Enter."
+      explain: "<strong>Correct!</strong> Both the legacy CSE array formula and SUMPRODUCT can calculate the conditional total without a helper column or SUMIF. SUMIF is a valid Excel function, but it is excluded by the question."
     },
     {
       topic: "Array Formulas & Advanced Statistical Functions",
