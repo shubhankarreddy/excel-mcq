@@ -59,10 +59,11 @@
       background: var(--teal);
       color: #fff;
       padding: 0 24px;
-      height: 56px;
+      min-height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -93,6 +94,8 @@
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
     .topbar-stat {
       display: flex;
@@ -114,6 +117,17 @@
       transition: background .15s;
     }
     .theme-btn:hover { background: rgba(255,255,255,.25); }
+    .github-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: .85rem;
+      font-weight: 700;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.22);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .github-link:hover { background: rgba(255,255,255,.28); }
 
     /* ── Level selector ────────────────────────────────────── */
     .level-bar {
@@ -482,6 +496,22 @@
       justify-content: center;
       flex-wrap: wrap;
     }
+    .star-cta {
+      margin: 0 auto 18px;
+      max-width: 460px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: .92rem;
+    }
+    .star-cta a {
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .star-cta a:hover { text-decoration: underline; }
 
     /* ── Topic review ──────────────────────────────────────── */
     .topic-review {
@@ -541,6 +571,7 @@
   <div class="topbar-right">
     <div class="topbar-stat" id="stat-score">🎯 Score: <strong id="global-score">0 / 0</strong></div>
     <div class="topbar-stat" id="stat-streak">🔥 Streak: <strong id="global-streak">0</strong></div>
+    <a class="github-link" href="https://github.com/shubhankarreddy/excel-mcq" target="_blank" rel="noopener">Star on GitHub</a>
     <button class="theme-btn" onclick="toggleTheme()">🌙</button>
   </div>
 </header>
@@ -616,6 +647,10 @@
     <div class="results-actions">
       <button class="btn btn-secondary" onclick="retryLevel()">↩ Retry Level</button>
       <button class="btn btn-primary" id="btn-next-level" onclick="nextLevel()">Next Level →</button>
+    </div>
+    <div class="star-cta">
+      <strong>Found this useful?</strong>
+      <a href="https://github.com/shubhankarreddy/excel-mcq" target="_blank" rel="noopener">Star this repo on GitHub</a>
     </div>
     <div class="topic-review">
       <div class="topic-review-title">Topic Breakdown</div>
