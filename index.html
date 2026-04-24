@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel MCQ — Skills Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & tokens ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #217346;   /* Excel green */
+      --teal-dark: #185c38;
+      --teal-light:#e8f5ef;
+      --amber:     #f59e0b;
+      --amber-light:#fffbeb;
+      --red:       #ef4444;
+      --red-light: #fef2f2;
+      --green:     #10b981;
+      --green-light:#f0fdf4;
+      --surface:   #ffffff;
+      --bg:        #f0f7f3;
+      --border:    #d1e7da;
+      --text:      #1e293b;
+      --text-muted:#64748b;
+      --shadow:    0 2px 8px rgba(0,0,0,.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.12);
+      --radius:    10px;
+      --font-body: 'DM Sans', sans-serif;
+      --font-head: 'Bitter', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme="dark"] {
+      --surface:   #1e293b;
+      --bg:        #0f172a;
+      --border:    #2d4a3e;
+      --text:      #f1f5f9;
+      --text-muted:#94a3b8;
+      --teal-light:#0d2b1e;
+      --green-light:#0d2b1e;
+      --red-light: #2b0d0d;
+      --amber-light:#2b2000;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Top bar ───────────────────────────────────────────── */
+    .topbar {
+      background: var(--teal);
+      color: #fff;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar-icon {
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .topbar-title {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .82rem;
+      background: rgba(255,255,255,.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .theme-btn {
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: .85rem;
+      transition: background .15s;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Level selector ────────────────────────────────────── */
+    .level-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 24px 0;
+    }
+    .level-tab {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 28px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all .2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .level-tab .level-badge {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      background: var(--border);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 20px;
+      transition: all .2s;
+    }
+    .level-tab:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+    .level-tab.active {
+      border-color: var(--teal);
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+    .level-tab.active .level-badge {
+      background: var(--teal);
+      color: #fff;
+    }
+    .level-tab.done .level-badge {
+      background: var(--green);
+      color: #fff;
+    }
+
+    /* ── Main layout ───────────────────────────────────────── */
+    .main {
+      max-width: 860px;
+      margin: 20px auto;
+      padding: 0 20px 60px;
+    }
+
+    /* ── Progress bar ──────────────────────────────────────── */
+    .progress-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .progress-count {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--teal);
+      font-weight: 600;
+    }
+    .progress-bar-outer {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+      border-radius: 4px;
+      transition: width .4s ease;
+    }
+    .progress-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 12px;
+    }
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid transparent;
+      transition: all .2s;
+      cursor: pointer;
+    }
+    .dot.current { border-color: var(--teal); background: var(--teal-light); }
+    .dot.correct { background: var(--green); }
+    .dot.wrong   { background: var(--red); }
+    .dot.skipped { background: var(--amber); }
+
+    /* ── Question card ─────────────────────────────────────── */
+    .question-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      animation: fadeIn .25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .q-topic {
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--teal);
+      background: var(--teal-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .q-num {
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      color: var(--text-muted);
+    }
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: .88em;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ── Options ───────────────────────────────────────────── */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 16px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: .95rem;
+      color: var(--text);
+      text-align: left;
+      transition: all .15s;
+      width: 100%;
+      line-height: 1.5;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+    .option-btn .opt-letter {
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      font-weight: 700;
+      background: var(--border);
+      color: var(--text-muted);
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all .15s;
+    }
+    .option-btn:hover:not(:disabled) .opt-letter {
+      background: var(--teal);
+      color: #fff;
+    }
+    .option-btn.selected {
+      border-color: var(--teal);
+      background: var(--teal-light);
+    }
+    .option-btn.selected .opt-letter { background: var(--teal); color: #fff; }
+    .option-btn.correct {
+      border-color: var(--green);
+      background: var(--green-light);
+      color: var(--text);
+    }
+    .option-btn.correct .opt-letter { background: var(--green); color: #fff; }
+    .option-btn.wrong {
+      border-color: var(--red);
+      background: var(--red-light);
+      color: var(--text);
+    }
+    .option-btn.wrong .opt-letter { background: var(--red); color: #fff; }
+    .option-btn:disabled { cursor: default; }
+
+    /* ── Feedback ──────────────────────────────────────────── */
+    .feedback {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: .9rem;
+      line-height: 1.6;
+      display: none;
+    }
+    .feedback.show { display: block; animation: fadeIn .2s ease; }
+    .feedback.correct-fb {
+      background: var(--green-light);
+      border-left: 4px solid var(--green);
+      color: #166534;
+    }
+    .feedback.wrong-fb {
+      background: var(--red-light);
+      border-left: 4px solid var(--red);
+      color: #991b1b;
+    }
+    [data-theme="dark"] .feedback.correct-fb { color: #86efac; }
+    [data-theme="dark"] .feedback.wrong-fb { color: #fca5a5; }
+    .feedback strong { font-weight: 700; }
+
+    /* ── Action row ────────────────────────────────────────── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+    }
+    .btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ── Results ───────────────────────────────────────────── */
+    .results-screen {
+      display: none;
+      text-align: center;
+      padding: 40px 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      animation: fadeIn .3s ease;
+    }
+    .results-screen.show { display: block; }
+    .score-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 8px solid var(--green);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .score-ring.good { border-color: var(--green); }
+    .score-ring.avg  { border-color: var(--amber); }
+    .score-ring.low  { border-color: var(--red); }
+    .score-num {
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .score-denom { font-size: .9rem; color: var(--text-muted); }
+    .results-title {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .results-msg {
+      color: var(--text-muted);
+      font-size: .95rem;
+      margin-bottom: 24px;
+    }
+    .results-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .breakdown-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 20px;
+      min-width: 90px;
+    }
+    .breakdown-item .bi-num {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .breakdown-item .bi-label {
+      font-size: .78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .bi-correct .bi-num { color: var(--green); }
+    .bi-wrong   .bi-num { color: var(--red); }
+    .bi-skipped .bi-num { color: var(--amber); }
+
+    .results-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── Topic review ──────────────────────────────────────── */
+    .topic-review {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .topic-review-title {
+      font-size: .85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .topic-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: .88rem;
+      margin-bottom: 4px;
+    }
+    .topic-row:nth-child(even) { background: var(--bg); }
+    .topic-score-bar {
+      width: 100px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .topic-score-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--green);
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .level-tab { padding: 10px 16px; font-size: .82rem; }
+      .question-card { padding: 20px 16px 16px; }
+      .q-text { font-size: .97rem; }
+      .topbar-stat:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top bar ─────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-icon">📊</div>
+    <span class="topbar-title">Excel MCQ — Skills Assessment</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-stat" id="stat-score">🎯 Score: <strong id="global-score">0 / 0</strong></div>
+    <div class="topbar-stat" id="stat-streak">🔥 Streak: <strong id="global-streak">0</strong></div>
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+
+<!-- ── Level tabs ──────────────────────────────────────────── -->
+<div class="level-bar">
+  <button class="level-tab active" id="tab-e1" onclick="switchLevel('e1')">
+    Basic
+    <span class="level-badge">E1</span>
+  </button>
+  <button class="level-tab" id="tab-e2" onclick="switchLevel('e2')">
+    Intermediate
+    <span class="level-badge">E2</span>
+  </button>
+  <button class="level-tab" id="tab-e3" onclick="switchLevel('e3')">
+    Advanced
+    <span class="level-badge">E3</span>
+  </button>
+</div>
+
+<!-- ── Main ───────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-label" id="level-label">Basic — E1</span>
+      <span class="progress-count" id="q-count">1 / 25</span>
+    </div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progress-bar" style="width:4%"></div>
+    </div>
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+
+  <!-- Question card -->
+  <div class="question-card" id="question-card">
+    <div class="q-meta">
+      <span class="q-topic" id="q-topic">Topic</span>
+      <span class="q-num" id="q-num">Q1</span>
+    </div>
+    <p class="q-text" id="q-text">Loading…</p>
+    <div class="options" id="options-list"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="action-row" style="margin-top:20px">
+      <button class="btn btn-secondary" id="btn-skip" onclick="skipQuestion()">Skip</button>
+      <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-screen" id="results-screen">
+    <div class="score-ring" id="score-ring">
+      <div class="score-num" id="result-score">0</div>
+      <div class="score-denom" id="result-denom">/ 25</div>
+    </div>
+    <h2 class="results-title" id="results-title">Level Complete!</h2>
+    <p class="results-msg" id="results-msg">Here's how you did.</p>
+    <div class="results-breakdown">
+      <div class="breakdown-item bi-correct">
+        <div class="bi-num" id="res-correct">0</div>
+        <div class="bi-label">Correct</div>
+      </div>
+      <div class="breakdown-item bi-wrong">
+        <div class="bi-num" id="res-wrong">0</div>
+        <div class="bi-label">Wrong</div>
+      </div>
+      <div class="breakdown-item bi-skipped">
+        <div class="bi-num" id="res-skipped">0</div>
+        <div class="bi-label">Skipped</div>
+      </div>
+    </div>
+    <div class="results-actions">
+      <button class="btn btn-secondary" onclick="retryLevel()">↩ Retry Level</button>
+      <button class="btn btn-primary" id="btn-next-level" onclick="nextLevel()">Next Level →</button>
+    </div>
+    <div class="topic-review">
+      <div class="topic-review-title">Topic Breakdown</div>
+      <div id="topic-breakdown"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── Question Bank ────────────────────────────────────────────
+const questions = {
+  e1: [
+    // --- Excel Interface & Navigation (3 q) ---
+    {
+      topic: "Excel Interface & Navigation",
+      q: "You receive a large report with 50+ columns. What's the fastest way to jump to a specific cell like AX1 without scrolling?",
+      opts: [
+        "Press Ctrl+Right Arrow repeatedly",
+        "Click the Name Box, type AX1, and press Enter",
+        "Use Find & Replace to search for the cell address",
+        "Hold Shift and scroll horizontally"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> The Name Box (top-left cell address field) lets you jump directly to any cell reference or named range instantly. This is much faster than scrolling through dozens of columns."
+    },
+    {
+      topic: "Excel Interface & Navigation",
+      q: "A workbook has 15 sheets. What's the quickest way to navigate to a specific sheet called 'Q4 Summary'?",
+      opts: [
+        "Click each sheet tab until you find it",
+        "Right-click the sheet navigation arrows (◄ ►) to get the full sheet list",
+        "Use Ctrl+F to search for the sheet name",
+        "Use View → Window → Switch Windows"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Right-clicking the navigation arrows at the bottom-left opens an 'Activate' dialog with all sheet names listed — a huge time-saver in large workbooks."
+    },
+    {
+      topic: "Excel Interface & Navigation",
+      q: "You want to see two different parts of a large spreadsheet at the same time. Which Excel feature allows this?",
+      opts: [
+        "Freeze Panes",
+        "View → Split",
+        "New Window + Arrange All",
+        "Both B and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Both Split (divides the worksheet into panes) and New Window + Arrange All (opens the same workbook in two windows) allow you to view different sections simultaneously."
+    },
+
+    // --- Data Entry & Basic Formatting (3 q) ---
+    {
+      topic: "Data Entry & Basic Formatting",
+      q: "You're entering phone numbers like '0412 345 678' but Excel removes the leading zero. What's the most reliable fix?",
+      opts: [
+        "Type an apostrophe (') before the number",
+        "Pre-format the cells as Text before entering",
+        "Both A and B prevent the issue",
+        "Use Find & Replace to add zeros back after entry"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> Both methods work: an apostrophe forces text storage, and pre-formatting cells as Text achieves the same result. Pre-formatting is better for bulk entry as it applies to the whole column."
+    },
+    {
+      topic: "Data Entry & Basic Formatting",
+      q: "You need to enter 'Marketing' in 200 non-contiguous cells scattered across a sheet. What's the most efficient method?",
+      opts: [
+        "Type it once, then copy (Ctrl+C) and paste (Ctrl+V) into each cell",
+        "Select all 200 cells using Ctrl+Click, type 'Marketing', then press Ctrl+Enter",
+        "Use AutoFill by dragging the fill handle",
+        "Use a macro"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Ctrl+Enter fills all selected cells simultaneously with the typed value — a core productivity technique for bulk data entry into non-contiguous selections."
+    },
+    {
+      topic: "Data Entry & Basic Formatting",
+      q: "Your financial report shows large numbers like 1234567 and you want them displayed as $1,234,567. Which is the correct approach?",
+      opts: [
+        "Retype each number with commas manually",
+        "Apply Accounting or Currency number format to the cells",
+        "Use the DOLLAR() text function",
+        "Multiply each value by 1000"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Number formats (Home → Number group) change the display without altering the underlying value. Using DOLLAR() converts numbers to text, which breaks further calculations."
+    },
+
+    // --- Basic Formulas (4 q) ---
+    {
+      topic: "Basic Formulas (SUM, AVERAGE, COUNT)",
+      q: "Your sales data is in B2:B150. Which formula sums only values greater than $10,000?",
+      opts: [
+        "=SUM(B2:B150>10000)",
+        "=SUMIF(B2:B150,\">10000\")",
+        "=COUNT(B2:B150,\">10000\")",
+        "=LARGE(B2:B150,10000)"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> SUMIF(range, criteria) is the right tool. The formula =SUM(B2:B150>10000) returns the count of TRUE values (1s), not the sum of the actual amounts."
+    },
+    {
+      topic: "Basic Formulas (SUM, AVERAGE, COUNT)",
+      q: "A monthly report needs a count of invoices marked 'Paid' in column C. Which formula is correct?",
+      opts: [
+        "=COUNT(C2:C100,\"Paid\")",
+        "=COUNTA(C2:C100)",
+        "=COUNTIF(C2:C100,\"Paid\")",
+        "=SUM(C2:C100=\"Paid\")"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> COUNTIF counts cells that match a specific criterion. COUNT only counts numeric cells, and COUNTA counts all non-empty cells regardless of value."
+    },
+    {
+      topic: "Basic Formulas (SUM, AVERAGE, COUNT)",
+      q: "You need to calculate average sales, but some cells contain #DIV/0! errors from incomplete data. Which formula handles errors gracefully?",
+      opts: [
+        "=AVERAGE(B2:B50)",
+        "=IFERROR(AVERAGE(B2:B50),0)",
+        "=AGGREGATE(1,6,B2:B50)",
+        "=AVERAGEIF(B2:B50,\"<>0\")"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> AGGREGATE with function_num=1 (Average) and options=6 (ignore errors) skips error cells and returns an accurate average. IFERROR returns 0 if ALL cells error — it doesn't skip individual error cells."
+    },
+    {
+      topic: "Basic Formulas (SUM, AVERAGE, COUNT)",
+      q: "A KPI dashboard needs both the maximum and minimum sales values. Which formula combination is correct?",
+      opts: [
+        "=LARGE(B2:B31,1) for max, =SMALL(B2:B31,1) for min",
+        "=MAX(B2:B31) for max, =MIN(B2:B31) for min",
+        "Both A and B return identical results",
+        "=HIGH(B2:B31) and =LOW(B2:B31)"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> MAX/MIN and LARGE/SMALL(range,1) return identical results for the highest/lowest value. MAX/MIN is simpler; LARGE/SMALL is useful when you need the 2nd, 3rd largest, etc."
+    },
+
+    // --- Cell References (3 q) ---
+    {
+      topic: "Cell References (Relative vs Absolute)",
+      q: "Your tax rate is in cell F1. You write =A2*F1 in B2 and copy it to B3. B3 shows =A3*F2 instead of =A3*F1. What's the fix?",
+      opts: [
+        "Change the formula to =A2*$F$1 before copying",
+        "Lock row A with =$A2*F1",
+        "Copy by pressing Ctrl+D instead of Ctrl+C/V",
+        "Put the tax rate in each row"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> $F$1 (absolute reference) locks both the column and row so the cell reference doesn't shift when the formula is copied. The $ sign before F locks the column; $ before 1 locks the row."
+    },
+    {
+      topic: "Cell References (Relative vs Absolute)",
+      q: "A commission calculator has sales in column A and a rate in B1. You want to copy the formula down so the rate always refers to B1. Which formula in A2 is correct?",
+      opts: [
+        "=A2*B1",
+        "=A2*$B1",
+        "=A2*$B$1",
+        "=A2*B$1"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> $B$1 makes both column B and row 1 absolute, so no matter where you copy the formula, it always references B1. If you only lock the column ($B1), the row would still shift when copying down."
+    },
+    {
+      topic: "Cell References (Relative vs Absolute)",
+      q: "You use =SUM($A$1:$A$10) in cells C1 through C5. All five cells show the same total. Why?",
+      opts: [
+        "The formula has an error",
+        "Absolute references prevent the range from adjusting when copied",
+        "SUM automatically expands the range",
+        "The cells are linked"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Absolute references ($A$1:$A$10) are 'locked' — they don't adjust when the formula is copied to other cells. Every copy of the formula sums the same fixed range."
+    },
+
+    // --- Copy, Paste & AutoFill (2 q) ---
+    {
+      topic: "Copy, Paste & AutoFill",
+      q: "You have a formula-based report. A colleague needs the values in a new sheet but NOT the formulas or formatting. Which paste option is correct?",
+      opts: [
+        "Ctrl+V (standard paste)",
+        "Paste Special → Values (Ctrl+Alt+V → V)",
+        "Paste Special → Formulas",
+        "Paste Special → All Except Borders"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Paste Special → Values pastes the calculated results without the underlying formulas or any formatting. This is essential when sharing data to prevent formula errors or circular references."
+    },
+    {
+      topic: "Copy, Paste & AutoFill",
+      q: "You have Jan-2024, Feb-2024, Mar-2024 in three cells. You want Excel to auto-fill through Dec-2024. What's the fastest method?",
+      opts: [
+        "Type each month manually",
+        "Select the three cells and drag the fill handle downward",
+        "Press Ctrl+D to fill down",
+        "Use Data → Flash Fill"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Excel recognizes date patterns and extends them automatically when you drag the fill handle. Selecting multiple cells first gives Excel enough context to identify the step size (1 month)."
+    },
+
+    // --- Sorting & Basic Filtering (3 q) ---
+    {
+      topic: "Sorting & Basic Filtering",
+      q: "Employee data has Last Name in column A and First Name in column B. You need to sort by last name, with first name as a tiebreaker. How?",
+      opts: [
+        "Sort by Last Name only — Excel handles ties alphabetically",
+        "Use Data → Sort, add Last Name as Level 1 and First Name as Level 2",
+        "Sort by First Name first, then sort by Last Name",
+        "Combine names in a helper column, then sort"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Multi-level sorting (Data → Sort → Add Level) lets you define sort priority. Level 1 is the primary sort; ties are broken by Level 2 criteria. Never sort by the secondary column first."
+    },
+    {
+      topic: "Sorting & Basic Filtering",
+      q: "You apply a filter and notice the row numbers turn blue and some are missing from the sequence. What does this indicate?",
+      opts: [
+        "Those rows contain errors",
+        "Those rows are protected",
+        "Some rows are hidden because they don't match the active filter criteria",
+        "Those rows were accidentally deleted"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> Blue row numbers with gaps in the sequence are Excel's way of showing that rows are hidden by an active filter — not deleted. Remove the filter to reveal all rows."
+    },
+    {
+      topic: "Sorting & Basic Filtering",
+      q: "A manager needs a list of Sydney-office employees earning over $80,000. Which is the best approach?",
+      opts: [
+        "Sort by office, delete non-Sydney rows, then sort by salary",
+        "Apply AutoFilter: filter 'Sydney' in the Office column, then use Custom Filter (greater than 80000) on Salary",
+        "Use VLOOKUP to extract matching records to a new sheet",
+        "Manually scan and copy matching rows"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> AutoFilter with multiple column filters is non-destructive (rows are hidden, not deleted) and instantly reversible. Custom Filter allows you to set numeric conditions like 'greater than'."
+    },
+
+    // --- Page Setup & Printing (2 q) ---
+    {
+      topic: "Page Setup & Printing",
+      q: "Your 6-column report prints across 3 pages horizontally. How do you force it to print on a single page wide?",
+      opts: [
+        "Manually reduce font size until it fits",
+        "Use Page Layout → Scale to Fit → set Width to '1 page'",
+        "Change orientation to Landscape only",
+        "Delete some columns temporarily before printing"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Scale to Fit (Page Layout ribbon) scales the entire sheet to fit within a specified number of pages wide/tall. Setting Width to 1 page is non-destructive and much safer than changing font sizes manually."
+    },
+    {
+      topic: "Page Setup & Printing",
+      q: "Your 50-row report should show column headers (Date, Amount, Client) on every printed page. Where do you configure this?",
+      opts: [
+        "Copy and paste the header row manually at the top of each page",
+        "Page Layout → Print Titles → 'Rows to repeat at top'",
+        "Insert → Header & Footer → type the column names",
+        "View → Freeze Panes → Freeze Top Row"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Print Titles (Page Layout tab) repeats specific rows or columns on every printed page. Freeze Panes only affects the screen view, not printing. Headers/Footers appear in the margin, not in the data area."
+    },
+
+    // --- Saving, File Formats & Workbook Basics (3 q) ---
+    {
+      topic: "Saving, File Formats & Workbook Basics",
+      q: "You create a workbook with macros, but colleagues saving it as .xlsx lose all macros. Which format preserves macros?",
+      opts: [
+        ".xlsx — Excel Workbook",
+        ".xls — Excel 97-2003",
+        ".xlsm — Excel Macro-Enabled Workbook",
+        ".xlsb — Excel Binary Workbook"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> .xlsm is the macro-enabled Excel format. The 'm' stands for macro. .xlsx intentionally cannot store VBA code as a security measure. .xlsb also stores macros but is less universally supported."
+    },
+    {
+      topic: "Saving, File Formats & Workbook Basics",
+      q: "You need to share a formatted report with an external client who may not have Excel. They only need to view it, not edit it. Best format?",
+      opts: [
+        ".xlsx and advise them to install Excel",
+        ".csv (comma-separated values)",
+        ".pdf",
+        ".html"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> PDF preserves all formatting, fonts, and layout and is viewable on any device without special software. CSV strips all formatting, and HTML may not preserve complex layouts."
+    },
+    {
+      topic: "Saving, File Formats & Workbook Basics",
+      q: "You accidentally delete a row of important data. What's the fastest recovery method?",
+      opts: [
+        "Close without saving and reopen the file",
+        "Press Ctrl+Z to undo immediately",
+        "File → Info → Recover Unsaved Workbooks",
+        "Check the Windows Recycle Bin"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Ctrl+Z (Undo) reverses the most recent action immediately — this is always the first response to accidental edits. Closing without saving works too but risks losing other recent valid changes."
+    }
+  ],
+
+  e2: [
+    // --- Logical & Lookup Functions (4 q) ---
+    {
+      topic: "Logical & Lookup Functions",
+      q: "Employee IDs are in column A, salaries in column D. You're looking up by the ID in cell G2. Which VLOOKUP is correct?",
+      opts: [
+        "=VLOOKUP(G2,A:D,4,FALSE)",
+        "=VLOOKUP(G2,A:D,4,TRUE)",
+        "=VLOOKUP(G2,D:A,1,FALSE)",
+        "=HLOOKUP(G2,A:D,4,FALSE)"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup]). FALSE = exact match (required for IDs). The 4th column in A:D is column D (salaries). HLOOKUP looks across rows, not down columns."
+    },
+    {
+      topic: "Logical & Lookup Functions",
+      q: "A commission table has: $0–$50K = 5%, $50K–$100K = 8%, over $100K = 12%. Cell A1 has the sales amount. Which formula is both correct and concise?",
+      opts: [
+        "=IF(A1<50000,5%,IF(A1<100000,8%,12%))",
+        "=CHOOSE(A1,5%,8%,12%)",
+        "=IFS(A1<50000,5%,A1<100000,8%,TRUE,12%)",
+        "Both A and C are correct"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Both nested IF and IFS work. IFS (Excel 2016+) is cleaner for multiple conditions. CHOOSE requires an integer index, not a value comparison — it won't work here."
+    },
+    {
+      topic: "Logical & Lookup Functions",
+      q: "Your VLOOKUP returns #N/A for some product codes. You suspect some lookup values have trailing spaces from a data import. Which formula fixes this?",
+      opts: [
+        "=IFERROR(VLOOKUP(A2,Products,2,FALSE),\"Not Found\")",
+        "=VLOOKUP(TRIM(A2),Products,2,FALSE)",
+        "=VLOOKUP(CLEAN(A2),Products,2,FALSE)",
+        "=IF(ISNA(VLOOKUP(A2,Products,2,FALSE)),\"\",VLOOKUP(A2,Products,2,FALSE))"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> TRIM() removes leading, trailing, and excess internal spaces before the lookup occurs — this fixes the root cause. IFERROR just hides the error without fixing the data quality issue."
+    },
+    {
+      topic: "Logical & Lookup Functions",
+      q: "You need VLOOKUP to return 'Not Available' when no match is found, instead of #N/A. Which is the most concise formula?",
+      opts: [
+        "=IF(ISNA(VLOOKUP(A2,Table,2,FALSE)),\"Not Available\",VLOOKUP(A2,Table,2,FALSE))",
+        "=IFERROR(VLOOKUP(A2,Table,2,FALSE),\"Not Available\")",
+        "=VLOOKUP(A2,Table,2,FALSE)&\"Not Available\"",
+        "=IFNA(VLOOKUP(A2,Table,2,FALSE),\"Not Available\")"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> IFNA (Excel 2013+) handles only #N/A errors, while IFERROR catches ALL errors. IFNA is preferred for lookups because it won't hide legitimate errors like wrong column counts. Both B and D work; D is more precise."
+    },
+
+    // --- Charts & Data Visualisation (3 q) ---
+    {
+      topic: "Charts & Data Visualisation",
+      q: "Monthly sales data shows an upward trend. Your manager wants actual figures as bars AND a 3-month forward projection. Which chart feature provides the projection?",
+      opts: [
+        "Add a secondary axis",
+        "Right-click a data series → Add Trendline → set Forward forecast periods",
+        "Create a second chart with projected values",
+        "Use Sparklines"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Trendlines with a Forward forecast setting project the trend visually beyond your actual data range. You can choose linear, exponential, or other trendline types to match your data pattern."
+    },
+    {
+      topic: "Charts & Data Visualisation",
+      q: "You're presenting the revenue breakdown for 5 business units (adding to 100%). Which chart type is most appropriate?",
+      opts: [
+        "Line chart (shows change over time)",
+        "Stacked bar chart",
+        "Pie or Donut chart",
+        "Scatter plot"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> Pie/Donut charts are ideal for showing part-to-whole relationships when the total is 100%. Limit to ~5–6 segments for readability. For comparisons across multiple time periods, a stacked bar would be more appropriate."
+    },
+    {
+      topic: "Charts & Data Visualisation",
+      q: "You need to show monthly revenue (large values, $millions) and customer satisfaction score (0–10 scale) on the same chart. What should you use?",
+      opts: [
+        "Two separate charts side by side",
+        "A combo chart with a secondary Y-axis for the different scales",
+        "Normalise both series to 0–100% before charting",
+        "A scatter plot"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> A secondary axis allows two data series with vastly different scales to be displayed clearly on one chart. Right-click the series with the smaller scale → Format Data Series → Secondary Axis."
+    },
+
+    // --- Excel Tables & Structured References (3 q) ---
+    {
+      topic: "Excel Tables & Structured References",
+      q: "After converting a data range to an Excel Table, a new row is added below the last row. What happens automatically?",
+      opts: [
+        "Nothing — the table must be manually extended",
+        "The table auto-expands; all formulas and formatting extend to the new row",
+        "A warning prompts you to confirm the extension",
+        "The new row is flagged with a different color"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Excel Tables automatically expand to include adjacent data. Structured references, calculated columns, and formatting all extend to new rows — a major advantage over plain data ranges."
+    },
+    {
+      topic: "Excel Tables & Structured References",
+      q: "In a Table named 'Sales', you want to sum only the 'Revenue' column using structured references. Which formula is correct?",
+      opts: [
+        "=SUM(Sales[Revenue])",
+        "=SUM(TABLE(Sales,Revenue))",
+        "=SUM(Sales.Revenue)",
+        "=SUMTABLE(\"Sales\",\"Revenue\")"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> Structured references use TableName[ColumnHeader] syntax. They're more readable, auto-adjust when the table grows, and work in any cell — not just within the table."
+    },
+    {
+      topic: "Excel Tables & Structured References",
+      q: "You have an Excel Table with 1,000 rows. You enable the Total Row and click the Revenue total cell. Which function does Excel use to sum only visible (filtered) rows?",
+      opts: [
+        "=SUM(Sales[Revenue])",
+        "=SUBTOTAL(109,Sales[Revenue])",
+        "=AGGREGATE(9,5,Sales[Revenue])",
+        "=TOTAL(Sales[Revenue])"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> The Table Total Row uses SUBTOTAL(), which automatically ignores rows hidden by a filter. Function code 9=SUM, 109=SUM ignoring hidden rows. This is why filter-aware totals work correctly in tables."
+    },
+
+    // --- Text Functions & Data Cleaning (3 q) ---
+    {
+      topic: "Text Functions & Data Cleaning",
+      q: "CRM data has full names formatted as 'Smith, John'. You need to separate first and last names. Which approach works for all rows?",
+      opts: [
+        "=LEFT() and =RIGHT() with a fixed character count",
+        "Data → Text to Columns with comma as delimiter",
+        "=MID() and =FIND() to extract around the comma position",
+        "Both B and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Text to Columns is the quick solution for splitting once; formula-based approach (FIND + MID/LEFT/RIGHT) is better when the source data updates dynamically. Both are valid depending on your use case."
+    },
+    {
+      topic: "Text Functions & Data Cleaning",
+      q: "Phone numbers are stored inconsistently: '0412345678', '0412 345 678', '(04) 1234 5678'. You need them all as '0412345678'. Which function removes all spaces?",
+      opts: [
+        "=TRIM(A1)",
+        "=SUBSTITUTE(A1,\" \",\"\")",
+        "=CLEAN(A1)",
+        "=REPLACE(A1,\" \",\"\")"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> SUBSTITUTE replaces every occurrence of a specific character (space) with nothing. TRIM only removes leading/trailing spaces and reduces internal multiple spaces to one — it won't remove ALL spaces."
+    },
+    {
+      topic: "Text Functions & Data Cleaning",
+      q: "Your HR system exports birthdates as text like '19900315' (YYYYMMDD). You need these as proper Excel dates. Which formula converts them correctly?",
+      opts: [
+        "=DATEVALUE(A1)",
+        "=DATE(LEFT(A1,4),MID(A1,5,2),RIGHT(A1,2))",
+        "=TEXT(A1,\"YYYY-MM-DD\")",
+        "=VALUE(A1)"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> DATE(year,month,day) assembles a proper Excel date from numeric parts. LEFT extracts YYYY (4 chars), MID extracts MM (2 chars starting at position 5), RIGHT extracts DD (2 chars). DATEVALUE needs a formatted date string, not a compact number."
+    },
+
+    // --- Date & Time Functions (2 q) ---
+    {
+      topic: "Date & Time Functions",
+      q: "You need working days (Mon–Fri only) between a project start date in A1 and end date in B1, excluding weekends. Which formula is correct?",
+      opts: [
+        "=B1-A1",
+        "=DAYS(B1,A1)",
+        "=NETWORKDAYS(A1,B1)-1",
+        "=WORKDAY(B1,-A1)"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> NETWORKDAYS counts working days between two dates, inclusive of both endpoints. Subtracting 1 excludes the start date to count elapsed working days. NETWORKDAYS can also accept a holiday list as a third argument."
+    },
+    {
+      topic: "Date & Time Functions",
+      q: "Your dataset has timestamps like '15/03/2024 14:30:00'. A pivot analysis needs month numbers. Which formula returns the month as a number (1–12)?",
+      opts: [
+        "=MID(A1,4,2)",
+        "=MONTH(A1)",
+        "=TEXT(A1,\"MM\")",
+        "=DATEPART(\"m\",A1)"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> MONTH() returns an integer 1–12. TEXT(A1,\"MM\") also returns the month but as text (\"03\"), which can cause issues in calculations. MID() would only work for specific date string formats and is fragile."
+    },
+
+    // --- PivotTables – Introduction (2 q) ---
+    {
+      topic: "PivotTables — Introduction",
+      q: "Sales data has: Date, Salesperson, Region, Product, Revenue. Your manager wants total revenue by Region with Salesperson subtotals within each region. How do you configure the PivotTable?",
+      opts: [
+        "Rows: Region, Columns: Salesperson, Values: SUM of Revenue",
+        "Rows: Region and Salesperson (Region first, nested), Values: SUM of Revenue",
+        "Filter: Region, Rows: Salesperson, Values: SUM of Revenue",
+        "Rows: Salesperson, Columns: Region, Values: SUM of Revenue"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Nesting fields in Rows (Region → Salesperson) creates grouped subtotals. Region is the outer/primary grouping; Salesperson appears indented beneath each region with its own subtotal."
+    },
+    {
+      topic: "PivotTables — Introduction",
+      q: "Your PivotTable groups dates by month but shows them alphabetically (April, August…) instead of chronologically. How do you fix the sort order?",
+      opts: [
+        "Sort the source data by date before refreshing",
+        "Right-click the month labels → Sort → Sort Oldest to Newest",
+        "Group the Date field in the PivotTable by Month — Excel maintains chronological order",
+        "Manually drag month labels into the correct position"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> When you Group dates by Month using the PivotTable's grouping feature (right-click a date → Group), Excel maintains the correct Jan–Dec chronological order. If months are text strings, they'll sort alphabetically — grouping the actual date field avoids this."
+    },
+
+    // --- Data Validation & Form Controls (2 q) ---
+    {
+      topic: "Data Validation & Form Controls",
+      q: "An expense form's 'Category' column should only accept: Travel, Accommodation, Meals, Equipment. How do you enforce this?",
+      opts: [
+        "Format the cells as Text",
+        "Data → Data Validation → Allow: List → enter the four options",
+        "Protect the sheet with a password",
+        "Use conditional formatting to highlight invalid entries"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Data Validation with a List creates a dropdown menu that restricts input to approved values. You can also reference a range (e.g., $G$1:$G$4) for the list, making it easy to update values later."
+    },
+    {
+      topic: "Data Validation & Form Controls",
+      q: "An input form should only accept dates up to and including today. Which Data Validation formula achieves this?",
+      opts: [
+        "=B1<=TODAY()",
+        "=B1<NOW()",
+        "=B1<=DATE(2099,12,31)",
+        "=ISDATE(B1)"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> In Data Validation, choose 'Custom' and use =B1<=TODAY(). This formula evaluates to TRUE only when the entered date is today or earlier. TODAY() updates dynamically, so no maintenance is needed."
+    },
+
+    // --- Conditional Formatting (3 q) ---
+    {
+      topic: "Conditional Formatting",
+      q: "A profit/loss column should show: positive values in green, negative in red, zero in yellow. What's the most efficient approach?",
+      opts: [
+        "Manually change font color cell by cell",
+        "Apply a Color Scale (green-yellow-red gradient)",
+        "Create three separate Conditional Formatting rules (>0, <0, =0) with the respective colors",
+        "Use a custom number format with color codes"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> Three explicit CF rules give precise control over which exact values get which color. A Color Scale applies a gradient across the range — every value gets a shade, not just three distinct categories. Custom number formats can apply colors but have limited logic."
+    },
+    {
+      topic: "Conditional Formatting",
+      q: "You want to highlight duplicate customer IDs in a column to find data entry errors. Which Conditional Formatting option does this directly?",
+      opts: [
+        "Top/Bottom Rules → Top 10 Items",
+        "Highlight Cells Rules → Duplicate Values",
+        "New Rule → Use a formula: =COUNTIF($A:$A,A1)>1",
+        "Both B and C highlight duplicates"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Both work: 'Duplicate Values' is a built-in one-click option; the COUNTIF formula approach gives more flexibility (e.g., highlighting only the 2nd and subsequent duplicates). Both are valid in practice."
+    },
+    {
+      topic: "Conditional Formatting",
+      q: "You have 12 months of revenue in B2:B13 and want to visualize relative performance with colored horizontal bars inside the cells. Which feature does this?",
+      opts: [
+        "Color Scales — applies a color gradient based on value",
+        "Data Bars — shows proportional bars within each cell",
+        "Icon Sets — shows arrows or traffic lights",
+        "Highlight Cell Rules"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Data Bars render a horizontal bar proportional to each cell's value — high revenue shows a longer bar. Color Scales apply a color gradient (no bars). Icon Sets show symbols. Data Bars are often used in KPI dashboards."
+    }
+  ],
+
+  e3: [
+    // --- Advanced Lookup: INDEX-MATCH & XLOOKUP (4 q) ---
+    {
+      topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
+      q: "Employee IDs are in column C (not column A). You need to look up by ID and return Salary from column F. Why does VLOOKUP fail here?",
+      opts: [
+        "VLOOKUP requires the lookup column to be the leftmost column of the table_array",
+        "VLOOKUP cannot return values from column F",
+        "VLOOKUP is limited to 100 rows",
+        "VLOOKUP cannot handle numeric IDs"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> VLOOKUP always searches the first (leftmost) column of the specified range. If your lookup column is in the middle or right of your data, VLOOKUP breaks. INDEX-MATCH and XLOOKUP have no this limitation."
+    },
+    {
+      topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
+      q: "Rewrite =VLOOKUP(A2,C:F,4,FALSE) using INDEX-MATCH:",
+      opts: [
+        "=INDEX(F:F,MATCH(A2,C:C,0))",
+        "=MATCH(A2,C:C,0)",
+        "=INDEX(C:F,4,MATCH(A2,C:C,0))",
+        "=INDEX(C:C,MATCH(F:F,A2,0))"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> INDEX(return_column, MATCH(lookup_value, lookup_column, 0)). MATCH finds the row number of A2 in column C; INDEX returns the value in column F at that row. This combination works regardless of column order."
+    },
+    {
+      topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
+      q: "Using XLOOKUP (Microsoft 365), replace =VLOOKUP(A2,$C$1:$F$100,4,FALSE) with the equivalent formula:",
+      opts: [
+        "=XLOOKUP(A2,$C$1:$C$100,$F$1:$F$100)",
+        "=XLOOKUP(A2,$C$1:$F$100,4)",
+        "=XLOOKUP(A2,$C$1:$C$100,$F$1:$F$100,\"Not Found\")",
+        "Both A and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> XLOOKUP(lookup, lookup_array, return_array, [if_not_found]). Both A and C are valid; C is more robust because it returns 'Not Found' instead of #N/A when no match exists. XLOOKUP also searches right-to-left, handles multiple return columns, and doesn't require the table to be sorted."
+    },
+    {
+      topic: "Advanced Lookup: INDEX-MATCH & XLOOKUP",
+      q: "You need a two-way lookup: find revenue where Row = 'East' (region) AND Column = 'March' (month). Which formula is the standard approach?",
+      opts: [
+        "=VLOOKUP(\"East\",Data,MATCH(\"March\",Headers,0),FALSE)",
+        "=INDEX(DataRange,MATCH(\"East\",RowHeaders,0),MATCH(\"March\",ColHeaders,0))",
+        "=XLOOKUP(\"East\",RowHeaders,XLOOKUP(\"March\",ColHeaders,DataRange))",
+        "Both B and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> INDEX with two MATCH functions is the classic two-way lookup. XLOOKUP can also be nested for two-way lookups in Microsoft 365. Both are valid; INDEX-MATCH is more universally compatible."
+    },
+
+    // --- Dynamic Array Functions (4 q) ---
+    {
+      topic: "Dynamic Array Functions",
+      q: "You enter =SORT(A2:A100) in cell C2. What happens in cells C3 through C100?",
+      opts: [
+        "You get a #SPILL! error because results can't spread",
+        "The sorted results automatically spill into adjacent cells",
+        "You must press Ctrl+Shift+Enter to activate array mode",
+        "Only C2 shows a result"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Dynamic array functions (Excel 365/2019+) automatically spill results into as many cells as needed. No Ctrl+Shift+Enter required — that's for legacy CSE array formulas. A #SPILL! error only occurs if cells in the spill range are already occupied."
+    },
+    {
+      topic: "Dynamic Array Functions",
+      q: "You have a list of 50 employees and want only the unique names, automatically updating when data changes. Which Excel 365 formula achieves this in one cell?",
+      opts: [
+        "=SORT(A2:A50)",
+        "=UNIQUE(A2:A50)",
+        "=DISTINCT(A2:A50)",
+        "=FILTER(A2:A50,COUNTIF(A2:A50,A2:A50)=1)"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> UNIQUE() returns a list with duplicates removed, automatically spilling into adjacent cells. DISTINCT() is a DAX function (Power Pivot), not an Excel worksheet function. The FILTER formula extracts items that appear exactly once — different from returning all unique values."
+    },
+    {
+      topic: "Dynamic Array Functions",
+      q: "=FILTER(A2:D50,B2:B50=\"Engineering\") returns results correctly. What happens if NO employees are in Engineering?",
+      opts: [
+        "Returns empty cells",
+        "Returns #N/A error",
+        "Returns #CALC! error by default",
+        "Returns 0"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> FILTER returns #CALC! when no rows match (Excel 365 default). To handle this gracefully, use the optional 4th argument: =FILTER(A2:D50,B2:B50=\"Engineering\",\"No results found\"). This is especially important in dashboards."
+    },
+    {
+      topic: "Dynamic Array Functions",
+      q: "You want to generate a 5-row × 3-column table of sequential numbers (1 to 15) starting at cell E1. Which formula is correct?",
+      opts: [
+        "=SEQUENCE(5,3)",
+        "=ARRAY(5,3,1,1)",
+        "=SEQUENCE(15)",
+        "=FILL(5,3)"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> SEQUENCE(rows, [cols], [start], [step]) — with 5 rows and 3 columns, it generates 1–15 in a 5×3 grid, filling left-to-right, top-to-bottom. The result automatically spills into a 5×3 range."
+    },
+
+    // --- Advanced PivotTables & Power Pivot (3 q) ---
+    {
+      topic: "Advanced PivotTables & Power Pivot",
+      q: "Your PivotTable has Revenue and Cost fields. You want a 'Profit' field (Revenue – Cost) without modifying the source data. Where do you add this?",
+      opts: [
+        "Add a formula column in the source data",
+        "PivotTable Analyze → Fields, Items & Sets → Calculated Field",
+        "Right-click a value → Value Field Settings → Calculated",
+        "Insert → Formula → Calculated Field"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Calculated Fields let you define formulas using existing PivotTable fields. They appear as a new column in the PivotTable and recalculate dynamically when filters change. Note: they can produce incorrect subtotals with averages — use with care."
+    },
+    {
+      topic: "Advanced PivotTables & Power Pivot",
+      q: "Your PivotTable shows raw sales figures. The CFO wants each product's percentage of total annual sales. How do you change the display?",
+      opts: [
+        "Create a new calculated field: =Revenue/SUM(Revenue)",
+        "Right-click the value field → Show Values As → % of Grand Total",
+        "Manually calculate percentages in a column beside the PivotTable",
+        "Apply a custom number format to the field"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> 'Show Values As' transforms how a field displays without changing the underlying data. Options include: % of Grand Total, % of Column Total, % of Row Total, Running Total, Rank, etc. This is a powerful but underused PivotTable feature."
+    },
+    {
+      topic: "Advanced PivotTables & Power Pivot",
+      q: "What is the key advantage of Power Pivot over a regular Excel PivotTable?",
+      opts: [
+        "Power Pivot creates more visually appealing charts",
+        "Power Pivot can handle millions of rows and create relationships between multiple tables using DAX measures",
+        "Power Pivot automatically cleans and deduplicates data",
+        "Power Pivot exports to PDF natively"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Power Pivot uses an in-memory columnar engine (xVelocity) capable of compressing and processing tens of millions of rows. DAX (Data Analysis Expressions) enables complex measures like YTD calculations, moving averages, and multi-table relationships that standard PivotTables cannot support."
+    },
+
+    // --- Power Query – Data Transformation (3 q) ---
+    {
+      topic: "Power Query — Data Transformation",
+      q: "You receive monthly CSV exports with identical structure. Instead of manually importing and appending each file, how can Power Query automate this?",
+      opts: [
+        "This cannot be automated — each file must be imported separately",
+        "Data → Get Data → From File → From Folder → Combine & Transform",
+        "Use VLOOKUP to reference each CSV file",
+        "Write a VBA macro to open and copy each file"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Power Query's 'From Folder' connector imports all files in a folder, combines them, and applies the same transformation steps. When new monthly files are added to the folder, a single Refresh updates everything — a major productivity gain."
+    },
+    {
+      topic: "Power Query — Data Transformation",
+      q: "After importing data via Power Query, column headers have imported as the first data row (Row 1 contains: Name, Age, Salary, etc. as values). How do you fix this in the Query Editor?",
+      opts: [
+        "Manually retype the column headers in Power Query",
+        "Home tab → Use First Row as Headers (Promote Headers)",
+        "Transform tab → Rename Columns one by one",
+        "Delete Row 1 and retype headers in Excel"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> 'Use First Row as Headers' (also called Promote Headers) elevates the first data row to become the column header row in one click. Power Query records this as a step, so it's automatically applied on every refresh."
+    },
+    {
+      topic: "Power Query — Data Transformation",
+      q: "Your sales data 'Region' column has inconsistent values: 'north', 'North', 'NORTH'. How do you standardize to 'North' in Power Query?",
+      opts: [
+        "Use Find & Replace for each variation",
+        "Select the column → Transform → Format → Capitalize Each Word",
+        "Add a Custom Column with = Text.Proper([Region])",
+        "Both B and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Both options work: the ribbon button (Transform → Format → Capitalize Each Word) adds a step using Text.Proper() in M language. Alternatively, Add Custom Column with Text.Proper([Region]) achieves the same result. Power Query records both approaches as replayable steps."
+    },
+
+    // --- Workbook Protection & Security (2 q) ---
+    {
+      topic: "Workbook Protection & Security",
+      q: "You want users to edit only input cells (B2:B50) while formula cells are locked. What's the correct sequence?",
+      opts: [
+        "Protect Sheet → check 'Select locked cells' only",
+        "Select ALL cells → Format Cells → Lock → then select B2:B50 → Unlock → then Protect Sheet",
+        "Select B2:B50 → Lock them → Protect Sheet",
+        "Protect Workbook → specify the input range"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> All cells are locked by default. The correct workflow: (1) Select all → unlock everything first, (2) Select only the formula cells → lock them, (3) Protect Sheet. Or equivalently: unlock just the input cells (B2:B50), leaving everything else locked, then Protect Sheet."
+    },
+    {
+      topic: "Workbook Protection & Security",
+      q: "You want to prevent users from adding, deleting, renaming, or moving sheets, but still allow editing data within sheets. Which protection is correct?",
+      opts: [
+        "Protect each individual sheet with a password",
+        "Review → Protect Workbook → Structure",
+        "File → Info → Protect Workbook → Encrypt with Password",
+        "Hide all sheets except the main one"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> 'Protect Workbook Structure' locks the workbook structure (no adding/deleting/renaming/moving sheets) without preventing cell editing within those sheets. Protecting individual sheets controls what can be edited in cells; these are two separate layers of protection."
+    },
+
+    // --- Macros & VBA Introduction (2 q) ---
+    {
+      topic: "Macros & VBA Introduction",
+      q: "You need to automate 12 repetitive formatting steps on monthly reports without writing VBA code. What's the quickest approach?",
+      opts: [
+        "Manually apply formatting each time",
+        "Developer → Record Macro → perform the steps → Stop Recording",
+        "Create a Cell Style and apply it",
+        "Use a template .xltx file"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> The Macro Recorder captures your actions and converts them to VBA automatically — no coding required. You can then run the macro with a single click or keyboard shortcut. For complex logic (loops, conditions), you'd edit the recorded VBA."
+    },
+    {
+      topic: "Macros & VBA Introduction",
+      q: "A VBA macro uses Worksheets(\"Sheet1\").Select. A colleague renames the tab to 'Jan 2024'. What happens when the macro runs?",
+      opts: [
+        "VBA automatically updates the reference to 'Jan 2024'",
+        "The macro throws a 'Subscript out of range' run-time error 9",
+        "VBA uses the sheet's internal CodeName (unchanged), so it works",
+        "The macro runs silently on the wrong sheet"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Worksheets(\"Sheet1\") references the sheet by its Tab name. Renaming the tab breaks this reference with Runtime Error 9. To make macros resilient to renaming, use the sheet's CodeName (e.g., Sheet1.Select in VBE — the CodeName doesn't change when you rename the tab)."
+    },
+
+    // --- Array Formulas & Advanced Statistical Functions (4 q) ---
+    {
+      topic: "Array Formulas & Advanced Statistical Functions",
+      q: "Column A = Region, Column B = Revenue. You want total revenue for 'East' region only, without a helper column or SUMIF. Which approach works in pre-365 Excel?",
+      opts: [
+        "=SUMIF(A:A,\"East\",B:B)",
+        "=SUM(IF(A2:A100=\"East\",B2:B100,0)) — entered with Ctrl+Shift+Enter",
+        "=SUMPRODUCT((A2:A100=\"East\")*B2:B100)",
+        "All three work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> All three work: SUMIF is simplest; the CSE array formula (Ctrl+Shift+Enter) evaluates each row conditionally; SUMPRODUCT multiplies the logical array (TRUE/FALSE = 1/0) by revenue values. In Excel 365, the CSE formula works without Ctrl+Shift+Enter."
+    },
+    {
+      topic: "Array Formulas & Advanced Statistical Functions",
+      q: "Quality control has 30 days of defect rates. A value is an outlier if it's more than 2 standard deviations from the mean. Which formula flags outliers?",
+      opts: [
+        "=IF(ABS(A1-AVERAGE($A$1:$A$30))>2*STDEV($A$1:$A$30),\"Outlier\",\"Normal\")",
+        "=IF(A1>AVERAGE($A$1:$A$30)*2,\"Outlier\",\"Normal\")",
+        "=OUTLIER(A1,$A$1:$A$30,2)",
+        "=IF(A1>PERCENTILE($A$1:$A$30,0.95),\"Outlier\",\"Normal\")"
+      ],
+      ans: 0,
+      explain: "<strong>Correct!</strong> The standard statistical definition of outlier uses z-score: |value - mean| > k × stddev. ABS() handles both high and low outliers. OUTLIER() is not an Excel function. Using PERCENTILE is a different (valid) approach but doesn't implement the 2-sigma rule."
+    },
+    {
+      topic: "Array Formulas & Advanced Statistical Functions",
+      q: "Revenue in column A, Expenses in column B — both 50 rows. You want the correlation coefficient between them. Which formula is correct?",
+      opts: [
+        "=PEARSON(A1:A50,B1:B50)",
+        "=CORREL(A1:A50,B1:B50)",
+        "=COVARIANCE.P(A1:A50,B1:B50)",
+        "Both A and B return the Pearson correlation coefficient"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> CORREL and PEARSON return identical results — the Pearson correlation coefficient (−1 to +1). CORREL is the more commonly used function. COVARIANCE.P returns the covariance, which is not normalized to −1/+1 scale."
+    },
+    {
+      topic: "Array Formulas & Advanced Statistical Functions",
+      q: "Column A = Product, Column B = Region, Column C = Revenue. You want total revenue for Product='Widget' AND Region='North'. Which formula is most efficient?",
+      opts: [
+        "=SUMIF(A:A,\"Widget\",C:C)",
+        "=SUMIFS(C:C,A:A,\"Widget\",B:B,\"North\")",
+        "=SUMPRODUCT((A2:A100=\"Widget\")*(B2:B100=\"North\"),C2:C100)",
+        "Both B and C work"
+      ],
+      ans: 3,
+      explain: "<strong>Correct!</strong> Both work for multiple criteria: SUMIFS is cleaner and handles entire columns efficiently; SUMPRODUCT is more flexible (can handle complex array logic). SUMIF only handles one criterion — it can't filter by both Product and Region simultaneously."
+    },
+
+    // --- Dashboard Design & Best Practices (3 q) ---
+    {
+      topic: "Dashboard Design & Best Practices",
+      q: "Your Excel KPI dashboard has PivotCharts. You want a single button/control to filter ALL charts to show only 'Q3 2024' data. Which feature should you use?",
+      opts: [
+        "Apply separate filters to each PivotChart manually",
+        "Insert a Slicer and connect it to all PivotTables/PivotCharts via 'Report Connections'",
+        "Use Data Validation dropdown with OFFSET-based dynamic named ranges",
+        "Add a Timeline control linked to each chart individually"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> Slicers (Insert → Slicer) can be connected to multiple PivotTables/Charts simultaneously via 'Report Connections' — one click filters the entire dashboard. Timelines work specifically for date fields. Slicers are the standard tool for interactive dashboard filtering."
+    },
+    {
+      topic: "Dashboard Design & Best Practices",
+      q: "A colleague opens your Excel dashboard and all charts show #REF! errors. What is the most likely cause?",
+      opts: [
+        "The file was saved in .xlsx format",
+        "The source data sheets were deleted, moved, or renamed",
+        "The charts need to be manually refreshed",
+        "The Excel version is incompatible with the chart type used"
+      ],
+      ans: 1,
+      explain: "<strong>Correct!</strong> #REF! in charts means the data series references are broken — most commonly because the source data sheet was deleted or renamed. Check each chart's data source (right-click → Select Data) and repair the sheet references."
+    },
+    {
+      topic: "Dashboard Design & Best Practices",
+      q: "When designing an Excel dashboard for executives, which of these is the MOST important best practice?",
+      opts: [
+        "Use as many chart types as possible to show variety",
+        "Display raw data tables alongside every chart",
+        "Limit to 3–5 key metrics per view, use consistent colors, and ensure the page fits on one screen without scrolling",
+        "Use 3D charts and bright colors to make it visually impressive"
+      ],
+      ans: 2,
+      explain: "<strong>Correct!</strong> Effective executive dashboards follow the 'less is more' principle: 3–5 KPIs maximum, a consistent color palette (with traffic-light signals for status), and a single-screen layout. 3D charts distort perception of values and should be avoided. Data tables belong in supporting sheets, not the executive view."
+    }
+  ]
+};
+
+// ── State ────────────────────────────────────────────────────
+let state = {
+  level: 'e1',
+  qi: 0,            // current question index
+  answers: {},      // { levelKey: [null/'correct'/'wrong'/'skipped', ...] }
+  streak: 0,
+  totalCorrect: 0,
+  totalAnswered: 0
+};
+
+function initAnswers(lvl) {
+  if (!state.answers[lvl]) {
+    state.answers[lvl] = new Array(questions[lvl].length).fill(null);
+  }
+}
+
+// ── Render ───────────────────────────────────────────────────
+function render() {
+  const lvl = state.level;
+  const qi  = state.qi;
+  const qs  = questions[lvl];
+  const q   = qs[qi];
+  const ans = state.answers[lvl];
+  const total = qs.length;
+
+  // Progress
+  const done = ans.filter(a => a !== null).length;
+  document.getElementById('level-label').textContent =
+    lvl === 'e1' ? 'Basic — E1' : lvl === 'e2' ? 'Intermediate — E2' : 'Advanced — E3';
+  document.getElementById('q-count').textContent = `${qi+1} / ${total}`;
+  document.getElementById('progress-bar').style.width = `${Math.max(4, (done/total)*100)}%`;
+
+  // Dots
+  const dotsEl = document.getElementById('progress-dots');
+  dotsEl.innerHTML = '';
+  ans.forEach((a, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === qi ? ' current' : '') +
+                  (a === 'correct' ? ' correct' : '') +
+                  (a === 'wrong'   ? ' wrong'   : '') +
+                  (a === 'skipped' ? ' skipped' : '');
+    d.title = `Q${i+1}`;
+    d.onclick = () => { state.qi = i; render(); };
+    dotsEl.appendChild(d);
+  });
+
+  // Question
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-num').textContent = `Q${qi+1}`;
+  document.getElementById('q-text').innerHTML = q.q;
+
+  // Options
+  const letters = ['A','B','C','D'];
+  const optEl = document.getElementById('options-list');
+  optEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    const alreadyAnswered = ans[qi] !== null;
+
+    let cls = '';
+    if (alreadyAnswered) {
+      if (i === q.ans) cls = ' correct';
+      else if (ans[qi] === 'wrong' && i === getSelectedIndex(lvl, qi)) cls = ' wrong';
+      btn.disabled = true;
+    }
+    btn.className = 'option-btn' + cls;
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    if (!alreadyAnswered) {
+      btn.onclick = () => selectAnswer(i);
+    }
+    optEl.appendChild(btn);
+  });
+
+  // Feedback
+  const fb = document.getElementById('feedback');
+  if (ans[qi] !== null && ans[qi] !== 'skipped') {
+    fb.className = 'feedback show ' + (ans[qi] === 'correct' ? 'correct-fb' : 'wrong-fb');
+    fb.innerHTML = ans[qi] === 'correct'
+      ? `✅ ${q.explain}`
+      : `❌ The correct answer is <strong>${letters[q.ans]}: ${q.opts[q.ans]}</strong>. ${q.explain}`;
+  } else if (ans[qi] === 'skipped') {
+    fb.className = 'feedback show wrong-fb';
+    fb.innerHTML = `⏭️ Skipped. The correct answer is <strong>${letters[q.ans]}: ${q.opts[q.ans]}</strong>. ${q.explain}`;
+  } else {
+    fb.className = 'feedback';
+  }
+
+  // Buttons
+  const allDone = ans.every(a => a !== null);
+  document.getElementById('btn-next').disabled = ans[qi] === null;
+  document.getElementById('btn-skip').disabled = ans[qi] !== null;
+  document.getElementById('btn-next').textContent =
+    qi === total - 1 ? (allDone ? 'See Results →' : 'Finish →') : 'Next →';
+
+  // Global stats
+  document.getElementById('global-score').textContent =
+    `${state.totalCorrect} / ${state.totalAnswered}`;
+  document.getElementById('global-streak').textContent = state.streak;
+
+  // Show/hide results
+  document.getElementById('question-card').style.display = allDone && qi >= total - 1 ? 'none' : 'block';
+}
+
+// Track selected wrong answer index
+const selectedMap = {};
+function setSelectedIndex(lvl, qi, idx) { selectedMap[`${lvl}-${qi}`] = idx; }
+function getSelectedIndex(lvl, qi) { return selectedMap[`${lvl}-${qi}`]; }
+
+function selectAnswer(optIdx) {
+  const lvl = state.level;
+  const qi  = state.qi;
+  const q   = questions[lvl][qi];
+  const correct = optIdx === q.ans;
+
+  state.answers[lvl][qi] = correct ? 'correct' : 'wrong';
+  setSelectedIndex(lvl, qi, optIdx);
+  state.totalAnswered++;
+  if (correct) {
+    state.totalCorrect++;
+    state.streak++;
+  } else {
+    state.streak = 0;
+  }
+  render();
+}
+
+function skipQuestion() {
+  const lvl = state.level;
+  const qi  = state.qi;
+  if (state.answers[lvl][qi] === null) {
+    state.answers[lvl][qi] = 'skipped';
+    state.totalAnswered++;
+    state.streak = 0;
+  }
+  render();
+}
+
+function nextQuestion() {
+  const lvl   = state.level;
+  const total = questions[lvl].length;
+  const ans   = state.answers[lvl];
+
+  // If last question and all done → show results
+  if (state.qi === total - 1 || ans.every(a => a !== null)) {
+    if (ans.every(a => a !== null)) {
+      showResults();
+      return;
+    }
+  }
+
+  // Find next unanswered question
+  let next = state.qi + 1;
+  if (next >= total) next = 0;
+  // Try to find an unanswered question
+  const start = next;
+  while (ans[next] !== null) {
+    next = (next + 1) % total;
+    if (next === start) { showResults(); return; }
+  }
+  state.qi = next;
+  render();
+}
+
+function showResults() {
+  const lvl = state.level;
+  const ans = state.answers[lvl];
+  const correct = ans.filter(a => a === 'correct').length;
+  const wrong   = ans.filter(a => a === 'wrong').length;
+  const skipped = ans.filter(a => a === 'skipped').length;
+  const total   = ans.length;
+  const pct     = Math.round((correct / total) * 100);
+
+  document.getElementById('question-card').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.className = 'results-screen show';
+
+  document.getElementById('result-score').textContent = correct;
+  document.getElementById('result-denom').textContent = `/ ${total}`;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent   = wrong;
+  document.getElementById('res-skipped').textContent = skipped;
+
+  const ring = document.getElementById('score-ring');
+  ring.className = 'score-ring ' + (pct >= 80 ? 'good' : pct >= 60 ? 'avg' : 'low');
+
+  const msgs = [
+    ['results-title', pct >= 80 ? '🏆 Excellent Work!' : pct >= 60 ? '👍 Good Effort!' : '📚 Keep Practising!'],
+    ['results-msg', pct >= 80
+      ? `You scored ${correct}/${total} (${pct}%) — strong performance on this level.`
+      : pct >= 60
+        ? `You scored ${correct}/${total} (${pct}%) — review the topics where you struggled.`
+        : `You scored ${correct}/${total} (${pct}%) — revisit the study materials and retry.`]
+  ];
+  msgs.forEach(([id, txt]) => document.getElementById(id).textContent = txt);
+
+  // Next level button
+  const levels = ['e1','e2','e3'];
+  const ci = levels.indexOf(lvl);
+  const btnNL = document.getElementById('btn-next-level');
+  if (ci < levels.length - 1) {
+    btnNL.style.display = '';
+    btnNL.textContent = 'Next Level →';
+  } else {
+    btnNL.style.display = 'none';
+  }
+
+  // Topic breakdown
+  const qs = questions[lvl];
+  const topicStats = {};
+  qs.forEach((q, i) => {
+    if (!topicStats[q.topic]) topicStats[q.topic] = { c: 0, t: 0 };
+    topicStats[q.topic].t++;
+    if (ans[i] === 'correct') topicStats[q.topic].c++;
+  });
+  const tbEl = document.getElementById('topic-breakdown');
+  tbEl.innerHTML = '';
+  Object.entries(topicStats).forEach(([topic, { c, t }]) => {
+    const pctT = Math.round((c/t)*100);
+    tbEl.innerHTML += `
+      <div class="topic-row">
+        <span>${topic}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:.8rem;color:var(--text-muted)">${c}/${t}</span>
+          <div class="topic-score-bar">
+            <div class="topic-score-fill" style="width:${pctT}%;background:${pctT>=80?'var(--green)':pctT>=50?'var(--amber)':'var(--red)'}"></div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  // Mark tab as done
+  document.getElementById(`tab-${lvl}`).classList.add('done');
+}
+
+function retryLevel() {
+  const lvl = state.level;
+  state.answers[lvl] = new Array(questions[lvl].length).fill(null);
+  // Recalculate global stats
+  let tc = 0, ta = 0;
+  Object.entries(state.answers).forEach(([, arr]) => {
+    arr.forEach(a => { if (a !== null) { ta++; if (a === 'correct') tc++; } });
+  });
+  state.totalCorrect = tc;
+  state.totalAnswered = ta;
+  state.streak = 0;
+  state.qi = 0;
+  document.getElementById(`tab-${lvl}`).classList.remove('done');
+  document.getElementById('results-screen').className = 'results-screen';
+  document.getElementById('question-card').style.display = '';
+  render();
+}
+
+function nextLevel() {
+  const levels = ['e1','e2','e3'];
+  const ci = levels.indexOf(state.level);
+  if (ci < levels.length - 1) switchLevel(levels[ci + 1]);
+}
+
+function switchLevel(lvl) {
+  state.level = lvl;
+  state.qi = 0;
+  initAnswers(lvl);
+  document.querySelectorAll('.level-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${lvl}`).classList.add('active');
+  document.getElementById('results-screen').className = 'results-screen';
+  document.getElementById('question-card').style.display = '';
+  // If level was completed, show results
+  if (state.answers[lvl].every(a => a !== null)) {
+    showResults();
+  } else {
+    render();
+  }
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── Boot ─────────────────────────────────────────────────────
+initAnswers('e1');
+render();
+</script>
+</body>
+</html>
