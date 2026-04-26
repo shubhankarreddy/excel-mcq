@@ -561,6 +561,62 @@
     }
     .submission-status.ok { color: var(--green); }
     .submission-status.err { color: var(--red); }
+    .learner-gate {
+      max-width: 780px;
+      margin: 24px auto 0;
+      padding: 0 20px 60px;
+    }
+    .learner-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-md);
+      padding: 26px;
+    }
+    .learner-title {
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+      color: var(--teal);
+    }
+    .learner-note {
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .learner-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .learner-card label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: .82rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .learner-card input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 11px;
+      font: inherit;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .learner-summary {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: .88rem;
+    }
+    body:not(.learner-ready) .level-bar,
+    body:not(.learner-ready) .main { display: none; }
+    body.learner-ready .learner-gate { display: none; }
 
     /* ── Topic review ──────────────────────────────────────── */
     .topic-review {
@@ -606,7 +662,7 @@
       .question-card { padding: 20px 16px 16px; }
       .q-text { font-size: .97rem; }
       .topbar-stat:nth-child(2) { display: none; }
-      .submission-grid { grid-template-columns: 1fr; }
+      .submission-grid, .learner-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -625,6 +681,34 @@
     <button class="theme-btn" onclick="toggleTheme()">🌙</button>
   </div>
 </header>
+
+<section class="learner-gate">
+  <form class="learner-card" id="learner-start-form" onsubmit="startQuiz(event)">
+    <h1 class="learner-title">Learner Details</h1>
+    <p class="learner-note">Enter your details to start the Excel MCQ assessment.</p>
+    <div class="learner-grid">
+      <label>Name *
+        <input id="profile-name" autocomplete="name" maxlength="120" required>
+      </label>
+      <label>Batch *
+        <input id="profile-batch" maxlength="80" required>
+      </label>
+      <label>Course *
+        <input id="profile-course" maxlength="120" required>
+      </label>
+      <label>Mobile *
+        <input id="profile-mobile" autocomplete="tel" maxlength="40" required>
+      </label>
+      <label>Email *
+        <input id="profile-email" type="email" autocomplete="email" maxlength="160" required>
+      </label>
+      <label>City *
+        <input id="profile-city" maxlength="80" required>
+      </label>
+    </div>
+    <button class="btn btn-primary" type="submit">Start Quiz</button>
+  </form>
+</section>
 
 <!-- ── Level tabs ──────────────────────────────────────────── -->
 <div class="level-bar">
@@ -696,21 +780,8 @@
     </div>
     <form class="submission-card" id="submission-form" onsubmit="submitAttempt(event)">
       <div class="submission-title">Submit your score</div>
-      <p class="submission-note">Your score, level, and topic attempt details will be saved for learner tracking.</p>
-      <div class="submission-grid">
-        <label>Name *
-          <input id="learner-name" name="learner_name" autocomplete="name" maxlength="120" required>
-        </label>
-        <label>Email
-          <input id="learner-email" name="learner_email" type="email" autocomplete="email" maxlength="160">
-        </label>
-        <label>Phone
-          <input id="learner-phone" name="learner_phone" autocomplete="tel" maxlength="40">
-        </label>
-        <label>Batch
-          <input id="learner-batch" name="batch" maxlength="80" placeholder="e.g. Weekend Batch">
-        </label>
-      </div>
+      <p class="submission-note">Your learner details were captured before the quiz started.</p>
+      <div class="learner-summary" id="learner-summary"></div>
       <button class="btn btn-primary" id="btn-submit-attempt" type="submit">Submit Score</button>
       <div class="submission-status" id="submission-status" aria-live="polite"></div>
     </form>
@@ -1701,6 +1772,7 @@ const SUPABASE_URL = 'https://imlgdikylqhstxltmxou.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_45WoVbtaoAfv-_ZyPTl_Fw_zADhv8SP';
 const QUIZ_META = { slug: 'excel', title: 'Excel MCQ' };
 const levelLabels = { e1: 'Basic - E1', e2: 'Intermediate - E2', e3: 'Advanced - E3' };
+let learnerProfile = null;
 
 function initAnswers(lvl) {
   if (!state.answers[lvl]) {
@@ -1821,6 +1893,27 @@ function resetSubmissionState() {
     btn.textContent = 'Submit Score';
   }
   setSubmissionStatus('');
+  renderLearnerSummary();
+}
+
+function startQuiz(event) {
+  event.preventDefault();
+  learnerProfile = {
+    name: document.getElementById('profile-name').value.trim(),
+    batch: document.getElementById('profile-batch').value.trim(),
+    course: document.getElementById('profile-course').value.trim(),
+    mobile: document.getElementById('profile-mobile').value.trim(),
+    email: document.getElementById('profile-email').value.trim(),
+    city: document.getElementById('profile-city').value.trim()
+  };
+  document.body.classList.add('learner-ready');
+  renderLearnerSummary();
+}
+
+function renderLearnerSummary() {
+  const el = document.getElementById('learner-summary');
+  if (!el || !learnerProfile) return;
+  el.textContent = `${learnerProfile.name} | ${learnerProfile.batch} | ${learnerProfile.course} | ${learnerProfile.city}`;
 }
 
 function currentAttemptSummary(lvl) {
@@ -1848,9 +1941,8 @@ function buildAnswerDetails(lvl) {
 
 async function submitAttempt(event) {
   event.preventDefault();
-  const name = document.getElementById('learner-name').value.trim();
-  if (name.length < 2) {
-    setSubmissionStatus('Please enter the learner name.', 'err');
+  if (!learnerProfile || learnerProfile.name.length < 2) {
+    setSubmissionStatus('Learner details are missing. Please refresh and enter details again.', 'err');
     return;
   }
 
@@ -1866,16 +1958,16 @@ async function submitAttempt(event) {
     quiz_title: QUIZ_META.title,
     level_key: lvl,
     level_label: levelLabels[lvl],
-    learner_name: name,
-    learner_email: document.getElementById('learner-email').value.trim() || null,
-    learner_phone: document.getElementById('learner-phone').value.trim() || null,
-    batch: document.getElementById('learner-batch').value.trim() || null,
+    learner_name: learnerProfile.name,
+    learner_email: learnerProfile.email || null,
+    learner_phone: learnerProfile.mobile || null,
+    batch: learnerProfile.batch || null,
     score: summary.correct,
     total: summary.total,
     correct_count: summary.correct,
     wrong_count: summary.wrong,
     skipped_count: summary.skipped,
-    answers: buildAnswerDetails(lvl),
+    answers: { learner: { course: learnerProfile.course, city: learnerProfile.city }, responses: buildAnswerDetails(lvl) },
     page_url: window.location.href,
     user_agent: navigator.userAgent
   };
