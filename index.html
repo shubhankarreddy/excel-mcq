@@ -2137,17 +2137,32 @@ function skipQuestion() {
   render();
 }
 
+function finishLevel() {
+  const lvl = state.level;
+  const ans = state.answers[lvl];
+  ans.forEach((value, index) => {
+    if (value === null) {
+      ans[index] = 'skipped';
+      state.totalAnswered++;
+    }
+  });
+  state.streak = 0;
+  showResults();
+}
+
 function nextQuestion() {
   const lvl   = state.level;
   const total = questions[lvl].length;
   const ans   = state.answers[lvl];
 
-  // If last question and all done → show results
-  if (state.qi === total - 1 || ans.every(a => a !== null)) {
-    if (ans.every(a => a !== null)) {
-      showResults();
-      return;
-    }
+  if (state.qi === total - 1) {
+    finishLevel();
+    return;
+  }
+
+  if (ans.every(a => a !== null)) {
+    showResults();
+    return;
   }
 
   // Find next unanswered question
