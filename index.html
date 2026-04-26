@@ -1811,6 +1811,8 @@ const SUPABASE_KEY = 'sb_publishable_45WoVbtaoAfv-_ZyPTl_Fw_zADhv8SP';
 const QUIZ_META = { slug: 'excel', title: 'Excel MCQ' };
 const levelLabels = { e1: 'Basic - E1', e2: 'Intermediate - E2', e3: 'Advanced - E3' };
 let learnerProfile = null;
+const submittedLevels = {};
+const submittingLevels = {};
 
 function initAnswers(lvl) {
   if (!state.answers[lvl]) {
@@ -2054,18 +2056,24 @@ function buildAnswerDetails(lvl) {
 }
 
 async function submitAttempt(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
   if (!learnerProfile || learnerProfile.name.length < 2) {
     setSubmissionStatus('Learner details are missing. Please refresh and enter details again.', 'err');
     return;
   }
 
+  const lvl = state.level;
+  if (submittedLevels[lvl] || submittingLevels[lvl]) return;
+  submittingLevels[lvl] = true;
+
+  const form = document.getElementById('submission-form');
+  const title = form ? form.querySelector('.submission-title') : null;
   const btn = document.getElementById('btn-submit-attempt');
   btn.disabled = true;
   btn.textContent = 'Submitting...';
-  setSubmissionStatus('Submitting score...');
+  if (title) title.textContent = 'Submitting your score';
+  setSubmissionStatus('Submitting score automatically...');
 
-  const lvl = state.level;
   const summary = currentAttemptSummary(lvl);
   const payload = {
     quiz_slug: QUIZ_META.slug,
@@ -2097,14 +2105,18 @@ async function submitAttempt(event) {
       body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
+    submittedLevels[lvl] = true;
     btn.textContent = 'Submitted';
     setSubmissionStatus('Score submitted successfully.', 'ok');
-    showSubmissionThankYou();
+    if (state.level === lvl) showSubmissionThankYou();
   } catch (err) {
     btn.disabled = false;
     btn.textContent = 'Submit Score';
+    if (title) title.textContent = 'Submit your score';
     setSubmissionStatus('Could not submit. Check Supabase policy/API key and try again.', 'err');
     console.error('Supabase submission failed:', err);
+  } finally {
+    submittingLevels[lvl] = false;
   }
 }
 
@@ -2210,6 +2222,11 @@ function showResults() {
   ];
   msgs.forEach(([id, txt]) => document.getElementById(id).textContent = txt);
   resetSubmissionState();
+  if (submittedLevels[lvl]) {
+    showSubmissionThankYou();
+  } else {
+    submitAttempt();
+  }
 
   // Next level button
   const levels = ['e1','e2','e3'];
@@ -2253,6 +2270,8 @@ function showResults() {
 function retryLevel() {
   const lvl = state.level;
   state.answers[lvl] = new Array(questions[lvl].length).fill(null);
+  delete submittedLevels[lvl];
+  delete submittingLevels[lvl];
   // Recalculate global stats
   let tc = 0, ta = 0;
   Object.entries(state.answers).forEach(([, arr]) => {
